@@ -6,8 +6,12 @@ def get_locale_package(package):
     locale = os.getcwd() + f"/{package}"
     return locale    
 
+def model_app_name(app_name):
+    return '--' + app_name
+
 def main():
     scaffold_command_package = sys.argv[2].split(':')
+    aplicativos = []
 
     if 'package' in scaffold_command_package:
         if len(scaffold_command_package)==2:
@@ -25,13 +29,27 @@ def main():
         else:
             print("Type 'package:<ProjectName>' for usage.")
 
+    cont = 0
+    check_apps = []
     for command in sys.argv:
         app = command.split(":")
         if 'app' in app:
+            print('level 1', app)            
+            aplicativos.append(app[1])
             create_app(app)
-        else:
+            cont += 1
+        elif cont == 0:
             pass
-
+        else:
+            for app_name in aplicativos:
+                if app_name not in check_apps:
+                    for i in sys.argv:                        
+                        if model_app_name(app_name) in i.split(':'):
+                            print("model is valid")                
+                    check_apps.append(app_name)                   
+                else:
+                    pass                  
+            cont -= 1
 
 if __name__=='__main__':
     if sys.argv[1] == 'scaffold':
